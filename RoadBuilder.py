@@ -1,6 +1,7 @@
 # Build Road
 # 1.create a simple road between two points
 # problem: how to see two points location in the map.
+import untilityFunctions
 
 inputs = (
     ("Road Build Example", "label")
@@ -44,6 +45,17 @@ def buildRoad(level, box, options):
                 x = box.minx + dx
                 y = box.miny + dy
                 z = box.minz + dz
+
+def detectMap(level, box, options):
+    ground = box.miny
+    width = box.maxx - box.minx
+    height = box.maxy - box.miny
+    depth = box.maxz - box.minz
+    treeMap = untilityFunctions.treeMap(level, box)
+    map = zeros((width, height, depth))
+    for dx in xrang(width):
+        for dz in xrange(depth):
+
 
 
 
