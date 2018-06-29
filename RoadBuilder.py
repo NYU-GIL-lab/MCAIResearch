@@ -2,6 +2,7 @@
 # 1.create a simple road between two points
 # problem: how to see two points location in the map.
 import untilityFunctions
+import Astar
 
 inputs = (
     ("Road Build Example", "label")
@@ -20,6 +21,8 @@ inputs = (
 
 def perform(level, box, options):
     buildRoad(level, box options)
+    detectMap(level, box, options);
+    
 
 def buildRoad(level, box, options):
     # start_point = options["Start Point"]
@@ -53,8 +56,12 @@ def detectMap(level, box, options):
     depth = box.maxz - box.minz
     treeMap = untilityFunctions.treeMap(level, box)
     map = zeros((width, height, depth))
-    for dx in xrang(width):
-        for dz in xrange(depth):
+    for item in treeMap:
+    	if item > 1:
+    		item = '#'
+    return treeMap
+#     for dx in xrang(width):
+#         for dz in xrange(depth):
 
 
 
