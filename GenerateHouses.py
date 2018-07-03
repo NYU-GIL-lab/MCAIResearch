@@ -84,13 +84,14 @@ def findBottom(level, box):
 #each sunbBox = (BounddingBox, houseType)
 def perform(level, box, options):
     minY = findBottom(level, box)
+    fillBox = BoundingBox((box.minx,box.miny,box.minz),(box.width, max(minY-box.miny,1), box.length)) 
     box = BoundingBox((box.minx,minY,box.minz),(box.width, options["Max Height"], box.length))   
-    utilityFunctions.fillBox(level, box, (0,0))
-    
-    utilityFunctions.fillLayer(level, box, 0, (alphaMaterials.Grass.ID,0))
+    utilityFunctions.fillBox(level, box, (0,0))   
+    utilityFunctions.fillBoxEmpty(level, fillBox, (alphaMaterials.Grass.ID,0))
+
     (houses, roads) = idonknowPartition(box)
     for house in houses:
-        chooseHouse(level, CutBar(house,2,2,2,2).middle, options)
+        chooseHouse(level, house , options)
         #utilityFunctions.fillBox(level, CutBar(house,2,2,2,2).middle, (random.randint(40,80),0))
         #buildSimpleFarmHouse(level, CutBar(house,2,2,2,2).middle, options)
         #buildFence(level, house, options)
@@ -105,7 +106,8 @@ def buildSimpleFarmHouse(level, box, options):
     #fencesBox = CutBar(box,1,1,1,1,boxSize[1]).middle
     #baseBox = CutBar(fencesBox, 2,2,2,2, boxSize[1]).middle
     #build fences and base
-    #fenceLeft, fenceRight,fenceFront, fenceBack = buildFence(level, fencesBox, options,1) 
+    #fenceLeft, fenceRight,fenceFront, fenceBack = buildFence(level, fencesBox, options,1)
+    ''' 
     centerX = (box.minx+box.maxx)//2
     centerZ = (box.minz + box.minz)//2
     for y in range(0, 250):
@@ -115,7 +117,7 @@ def buildSimpleFarmHouse(level, box, options):
     
     box = BoundingBox((box.minx, minY+1, box.minz),(box.width, box.height, box.length))
     utilityFunctions.fillBox(level, CutBar(box,0,0,0,0,options["Max Height"],2).middle,(0,0))
-
+    '''
     wallPartBox = buildBase(level,box,(options["Base"].ID, 0), 1)
     floorBoxes = buildWall(level, wallPartBox,(options["Base"].ID, 0), random.randint(5,25))
     
@@ -233,18 +235,22 @@ def chooseHouse(level, box,options):
     length = box.length
     width = box.width
     if min(length, width) >=8:
-        buildSimpleFarmHouse(level, box, options)
+        buildSimpleFarmHouse(level, CutBar(box,2,2,2,2).middle, options)
 
     else:
-        buildFarm()
+        buildFarm(level, box,options)
 
 def makeFloor(level, box, options):
     for x in range(box.minx, box.maxx):
         for z in range(box.minz, box.maxz):
             utilityFunctions.setBlock(level,(options["Base"].ID, 0),x,box.miny, z)
 
-def buildFarm():
-    pass       
+def buildFarm(level, box,options):
+    buildFence(level, box, options)
+    garden = CutBar(box,1,1,1,1,box.height).middle
+    for x in range(garden.minx, garden.maxx):
+        for z in range(garden.minz, garden.maxz):
+            utilityFunctions.setBlock(level, (59,0), x, garden.miny, z)
 
 def makePyramid(level, box, options, floors):
     [cx,cy,cz]=[(box.minx+box.maxx)/2, (box.miny+box.maxy)/2, (box.minz+box.maxz)/2]
