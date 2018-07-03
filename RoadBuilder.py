@@ -22,6 +22,7 @@ inputs = (
 import math
 
 test_map = []
+tm = []
 
 
 #########################################################
@@ -193,23 +194,23 @@ def find_path(box):
 #########################################
 # Perform
 
-def perform(level, box, options):
-    global tm
-    tm = detectMap(level, box, options)
-    global width
-    width = box.maxx - box.minx
-    global height
-    height = box.maxz - box.minz
-    tm_to_test_map()
-    find_path(box)
-    print_test_map()
-    #clearTerrain(level,box)
-    for i in range(len(test_map)):
-        for j in range(len(test_map[0])):
-            if(test_map[i][j] == '*'):
-                print i,j
-                #utilityFunctions.setBlock(level, (options["Road Material"].ID, 0), box.minx + j, box.miny, box.minz + i)
-                utilityFunctions.setBlockToGround(level, (options["Road Material"].ID, 0), box.minx + j, box.maxy, box.minz + i, box.miny)
+# def perform(level, box, options):
+#     global tm
+#     tm = detectMap(level, box, options)
+#     global width
+#     width = box.maxx - box.minx
+#     global height
+#     height = box.maxz - box.minz
+#     tm_to_test_map()
+#     find_path(box)
+#     print_test_map()
+#     #clearTerrain(level,box)
+#     for i in range(len(test_map)):
+#         for j in range(len(test_map[0])):
+#             if(test_map[i][j] == '*'):
+#                 print i,j
+#                 #utilityFunctions.setBlock(level, (options["Road Material"].ID, 0), box.minx + j, box.miny, box.minz + i)
+#                 utilityFunctions.setBlockToGround(level, (options["Road Material"].ID, 0), box.minx + j, box.maxy, box.minz + i, box.miny)
 
 def clearTerrain(level, box):
     for x in range(box.minx, box.maxx):
@@ -239,19 +240,20 @@ def buildRoad(level, box, options):
     end_y = box.maxy
 
 
-def detectMap(level, box, options):
+def detectMap(level, box, options, house_matrix):
     ground = box.miny
     width = box.maxx - box.minx
     height = box.maxy - box.miny
     depth = box.maxz - box.minz
-    treeMap = utilityFunctions.treeMap(level, box)
+    # treeMap = utilityFunctions.treeMap(level, box)
+    houseMap = house_matrix
     matrix = [['.' for temp_x in range(width)] for temp_y in range(depth)]
-    for i in range(len(treeMap)):
-        for j in range(len(treeMap[0])):
-            if(treeMap[i][j] > 1):
-                matrix[i][j] = '#'
+    # for i in range(len(houseMap)):
+    #     for j in range(len(houseMap[0])):
+    #         if(houseMap[i][j] > 1):
+    #             matrix[i][j] = '#'
     matrix[0][0] = 'S'
-    matrix[len(treeMap) - 1][len(treeMap[0]) - 1] = 'E'
+    matrix[len(houseMap) - 1][len(houseMap[0]) - 1] = 'E'
     return matrix
 
 
